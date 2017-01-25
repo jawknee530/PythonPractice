@@ -1,37 +1,35 @@
 def nav_graph(graph, cur_row, cur_col, directions, weight):
-    while cur_row < len(graph)-1 or cur_col < len(graph)-1:
-        cur_node = int(graph[cur_row][cur_col])
+    right_node = []
+    below_node = []
+    while cur_row < len(graph) or cur_col < len(graph):
         if cur_row < len(graph)-1:
             directions += 'd,'
-            cur_row += 1
-            weight += int(graph[cur_row][cur_col])
-            below_node = (graph, cur_row, cur_col, directions, weight)
+            weight += int(graph[cur_row+1][cur_col])
+            print('going down')
+            below_node = nav_graph(graph, cur_row+1, cur_col, directions, weight)
+            print('gone down')
             # below_node = int(graph[cur_row+1][cur_col])
         else:
-            below_node = float('-inf')
+            below_node = (0, 0, 0, 0, float('-inf'))
+
         if cur_col < len(graph)-1:
             directions += 'r,'
-            cur_col += 1
-            weight += int(graph[cur_row][cur_col])
-            right_node = (graph, cur_row, cur_col, directions, weight)
+            weight += int(graph[cur_row][cur_col+1])
+            print('going right')
+            right_node = nav_graph(graph, cur_row, cur_col+1, directions, weight)
+            print('gone right')
             # right_node = int(graph[cur_row][cur_col+1])
         else:
-            right_node = float('-inf')
-        if right_node > below_node:
-            return right_node[3], right_node[4]
+            right_node = (0, 0, 0, 0, float('-inf'))
+
+        if right_node[1] > below_node[1]:
+            return right_node
         else:
-            return below_node[3], below_node[4]
-        # if right_node > below_node:
-        #     directions += 'r,'
-        #     cur_col += 1
-        #     return nav_graph(graph, cur_row, cur_col, directions, weight)
-        # elif below_node > right_node:
-        #     directions += 'd,'
-        #     cur_row += 1
-        #     weight += int(graph[cur_row][cur_col])
-        #     return nav_graph(graph, cur_row, cur_col, directions, weight)
-
-
+            return below_node
+    if right_node[1] > below_node[1]:
+        return [right_node[0], right_node[1]]
+    else:
+        return [below_node[0], below_node[1]]
 
 def parse_graph(str):
     rows = str.split(';')
